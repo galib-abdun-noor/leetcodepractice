@@ -75,11 +75,53 @@ public class Main {
         System.out.println("output: "+stn.preorderTraversal(root));
         System.out.println("(145) Binary Tree Postorder Traversal");
         System.out.println("output: "+stn.postorderTraversal(root));
+        System.out.println("(168) Excel Sheet Column Title");
+        System.out.println("output: "+stn.convertToTitle(701));
         int[] nums4 = {2,2,1,1,1,2,2};
         System.out.println("(169) Majority Element");
         System.out.println("output: "+stn.majorityElement(nums4));
         System.out.println("(171) Excel Sheet Column Number");
         System.out.println("output: "+stn.titleToNumber("AB"));
+        System.out.println("(191) Number of 1 Bits");
+        System.out.println("output: "+stn.hammingWeight(00000000000000000000000000001011));
+        n1 = new ListNode(1);
+        n2 = new ListNode(2);
+        n3 = new ListNode(3);
+        n4 = new ListNode(4);
+        ListNode n5 = new ListNode(5);
+        n1.next = n2;
+        n2.next = n3;
+        n3.next = n4;
+        n4.next = n5;
+        System.out.println("(206) Reverse Linked List");
+        System.out.println("output: "+stn.reverseList(n1));
+        System.out.println("(217) Contains Duplicate");
+        System.out.println("output: "+stn.containsDuplicate(nums4));
+        System.out.println("(234) Palindrome Linked List");
+        System.out.println("output: "+stn.isPalindrome(n1));
+        System.out.println("(242) Valid Anagram");
+        System.out.println("output: "+stn.isAnagram("anagram","nagaram"));
+        int[] nums6 = {0,1,0,3,12};
+        stn.moveZeroes(nums6);
+        System.out.println("(283) Move Zeroes");
+        System.out.println("output: ");
+        for(int i:nums6){
+            System.out.print(i+" ");
+        }
+        System.out.println();
+        System.out.println("(326) Power of Three");
+        System.out.println("output: "+stn.isPowerOfThree(1162261467));
+        char[] s = {'h','e','l','l','o'};
+        stn.reverseString(s);
+        System.out.println("(344) Reverse String");
+        System.out.println("output: ");
+        for(char i:s){
+            System.out.print(i+" ");
+        }
+        System.out.println();
+        String[] word = {"flower","flow","flight"};
+        System.out.println("(14) Longest Common Prefix");
+        System.out.println("output: "+stn.longestCommonPrefix(word));
 //
 //        while (totalEvents-- != 0) {
 //            String event = scan.nextLine();
@@ -489,6 +531,19 @@ class Solution{
         return pre;
     }
 
+    public String convertToTitle(int columnNumber) {
+        int ind = columnNumber;
+        String col = "";
+        while(ind>0){
+            ind--;
+            int ascii = 65 + (ind%26);
+            String str = new Character((char) ascii).toString();
+            col = str+col;
+            ind = ind/26;
+        }
+        return col;
+    }
+
     public int majorityElement(int[] nums) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int num=0;
@@ -520,26 +575,188 @@ class Solution{
         return num;
     }
 
+    public int hammingWeight(int n) {
+        String num = Integer.toString(n);
+        int count = 0;
+        for(int i=0;i<num.length();i++){
+            if(num.charAt(i) == '1'){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        ListNode temp = head;
+        Stack<Integer> st = new Stack<>();
+        int size = 0;
+        while(temp!=null){
+            st.push(temp.val);
+            temp = temp.next;
+            size = size+1;
+        }
+        for(int i=0;i<size/2;i++){
+            if(head.val!=st.pop()){
+                return false;
+            }
+            head = head.next;
+        }
+        return true;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode temp = head;
+        ListNode prev = null;
+        while(temp != null){
+            ListNode next = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = next;
+        }
+        return prev;
+    }
+
+    public boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for(int i:nums){
+            if(set.contains(i)){
+                return true;
+            }
+            else{
+                set.add(i);
+            }
+        }
+        return false;
+    }
+
+//    public boolean isAnagram(String s, String t) {
+//        if(s.length()!=t.length())
+//            return false;
+//        HashMap<Character,Integer> sMap = new HashMap<>();
+//        HashMap<Character,Integer> tMap = new HashMap<>();
+//        for(int i=0;i<s.length();i++){
+//            if(sMap.get(s.charAt(i))==null){
+//                sMap.put(s.charAt(i),1);
+//            }else{
+//                int val = sMap.get(s.charAt(i))+1;
+//                sMap.put(s.charAt(i),val);
+//            }
+//            if(tMap.get(t.charAt(i))==null){
+//                tMap.put(t.charAt(i),1);
+//            }else{
+//                int val = tMap.get(t.charAt(i))+1;
+//                tMap.put(t.charAt(i),val);
+//            }
+//        }
+//        return sMap.equals(tMap);
+//    }
+
+    public boolean isAnagram(String s, String t){
+        if(s.length()==t.length()){
+            char[] arrS = s.toCharArray();
+            char[] arrT = t.toCharArray();
+            Arrays.sort(arrS);
+            Arrays.sort(arrT);
+            return Arrays.equals(arrS,arrT);
+        }
+        return false;
+    }
+
+    public void moveZeroes(int[] nums) {
+        int k=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i] == 0){
+                k++;
+            }else{
+                int temp = nums[i-k];
+                nums[i-k] = nums[i];
+                nums[i] = temp;
+            }
+        }
+    }
+
+    public boolean isPowerOfThree(int n) {
+        if(n==1)
+            return true;
+        if(n<1 || n%3!=0){
+            return false;
+        }
+        return isPowerOfThree(n/3);
+    }
+
+    public void reverseString(char[] s) {
+        for(int i=0,j=s.length-1; i<j;i++,j--){
+            char temp = s[i];
+            s[i] = s[j];
+            s[j] = temp;
+        }
+    }
+
+    public String longestCommonPrefix(String[] strs) {
+        List<Character> com = new ArrayList<>();
+        if(strs.length==1)
+            return strs[0];
+        int i=0;
+        String first = strs[0];
+        String sec = strs[1];
+        while(i<first.length() && i<sec.length()){
+            if(first.charAt(i)==sec.charAt(i)){
+                com.add(first.charAt(i));
+            }
+            else {
+                break;
+            }
+            i++;
+        }
+        int j=2;
+        while(j<strs.length){
+            String w = strs[j];
+            if(w.isEmpty()){
+                return "";
+            }
+            int p=0;
+            while(p<w.length() || p< com.size()){
+                if(p== com.size())
+                    break;
+                if(p==w.length()){
+                    com = com.subList(0,p);
+                    break;
+                }
+                if(com.get(p)!=w.charAt(p)){
+                    com = com.subList(0,p);
+                    break;
+                }
+                p++;
+            }
+            j++;
+        }
+        String sb = "";
+        for(char ch:com){
+            sb = sb+ch;
+        }
+        return sb;
+    }
+
 }
 
 class TreeNode {
-     int val;
-     TreeNode left;
-     TreeNode right;
-     TreeNode() {}
-     TreeNode(int val) { this.val = val; }
-     TreeNode(int val, TreeNode left, TreeNode right) {
-         this.val = val;
-         this.left = left;
-         this.right = right;
-     }
- }
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode() {}
+    TreeNode(int val) { this.val = val; }
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
 class ListNode {
-     int val;
-     ListNode next;
-     ListNode() {}
-     ListNode(int val) { this.val = val; next = null;}
-     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; next = null;}
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
 }
 
 class Student{
